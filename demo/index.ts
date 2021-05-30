@@ -1,12 +1,10 @@
 import { App, conditional, parent, View } from '../src/index';
 
-export type TestViewState = {
-  testValue: string;
-}
+class TestView extends View {
+  testValue = 'yeet';
 
-class TestView extends View<TestViewState> {
   constructor() {
-    super({ testValue: 'yeet' });
+    super();
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -14,22 +12,22 @@ class TestView extends View<TestViewState> {
   handleInputChange(e: Event): void {
     const $input = e.target as HTMLInputElement;
 
-    this.state.testValue = $input.value;
+    this.testValue = $input.value;
   }
 
   render(): HTMLDivElement {
     const { div, h1, input } = this.elements;
 
     const wrapper = div();
-    const heading = h1(() => `Hello, ${this.state.testValue}!`);
-    const testInput = input(() => ({ value: this.state.testValue, oninput: this.handleInputChange }));
+    const heading = h1(() => `Hello, ${this.testValue}!`);
+    const testInput = input(() => ({ value: this.testValue, oninput: this.handleInputChange }));
     const conditionalHeading1 = conditional(
       h1('WOAH1'),
-      { view: this, shouldRender: () => this.state.testValue == 'woah', parent: wrapper },
+      { view: this, shouldRender: () => this.testValue == 'woah', parent: wrapper },
     );
     const conditionalHeading2 = conditional(
       h1('WOAH2'),
-      { view: this, shouldRender: () => this.state.testValue == 'woah', parent: wrapper },
+      { view: this, shouldRender: () => this.testValue == 'woah', parent: wrapper },
     );
 
     return parent(wrapper, [

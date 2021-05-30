@@ -1,16 +1,14 @@
 import { elements } from './elements';
-export type JSONObject = Record<string | number | symbol, unknown>;
 
-export class View<State extends JSONObject = JSONObject> {
-  state: State;
+export class View {
   __observers: (() => void)[] = [];
 
   elements = elements({ bind: this });
 
-  constructor(defaultState: State) {
-    this.state = new Proxy<State>(defaultState, {
-      set: (state, key: keyof State, value: any, r): boolean => {
-        state[key] = value;
+  constructor() {
+    return new Proxy<View>(this, {
+      set: (view, key: keyof View, value: any, r): boolean => {
+        view[key] = value;
   
         this.__observers.forEach(func => func());
   
