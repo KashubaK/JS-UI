@@ -4,11 +4,10 @@
 
 ```ts
 import { parent, App, View } from 'js-ui';
-import { div, h1, form, input, label, button } from 'js-ui/elements';
 
 const app = new App('#root', LoginCardView);
 
-class LoginCardView implements View {
+class LoginCardView extends View {
   username = '';
   password = '';
 
@@ -17,7 +16,7 @@ class LoginCardView implements View {
   success = false;
 
   constructor() {
-    const proxy = new Proxy()
+    super()
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -67,33 +66,33 @@ class LoginCardView implements View {
     return { innerText: content };
   });
 
-  usernameInput = input(() => ({ value: this.username, onchange: this.handleUserChange })),
+  usernameInput = this.elements.input(() => ({ value: this.username, onchange: this.handleUserChange })),
   usernameField = parent(
-    div({ className: 'Field' }),
+    this.elements.div({ className: 'Field' }),
     [
-      label('Username'),
+      this.elements.label('Username'),
       this.usernameInput,
     ],
   );
 
-  passwordInput = input(() => ({ value: this.password, onchange: this.handlePasswordChange }));
+  passwordInput = this.elements.input(() => ({ value: this.password, onchange: this.handlePasswordChange }));
   passwordField = parent(
-    div({ className: 'Field' }),
+    this.elements.div({ className: 'Field' }),
     [
-      label('Password'),
+      this.elements.label('Password'),
       this.passwordInput,
     ],
   );
 
   loginForm = parent(
-    form({ onsubmit: this.handleFormSubmit }),
-    [this.usernameField, this.passwordField, button('Submit', { type: 'submit' })],
+    this.elements.form({ onsubmit: this.handleFormSubmit }),
+    [this.usernameField, this.passwordField, this.elements.button('Submit', { type: 'submit' })],
   );
 
   render() {
     return (
       parent(
-        div({ class: 'FormContainer' }),
+        this.elements.div({ class: 'FormContainer' }),
         [
           this.heading,
           this.form,

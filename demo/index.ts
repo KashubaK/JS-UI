@@ -1,4 +1,4 @@
-import { App, conditional, parent, View } from '../src/index';
+import { Entrypoint, conditional, parent, View } from '../src/index';
 
 class TestView extends View {
   testValue = 'yeet';
@@ -39,4 +39,4 @@ class TestView extends View {
   }
 }
 
-new App('#root', new TestView());
+new Entrypoint('#root', new TestView());

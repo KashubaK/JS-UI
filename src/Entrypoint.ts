@@ -1,6 +1,6 @@
 import { View } from "./View";
 
-export class App<T extends View> {
+export class Entrypoint<T extends View> {
   rootElement: HTMLElement | null;
 
   constructor(rootSelector: string, view: T) {

@@ -7,7 +7,7 @@ export class View {
 
   constructor() {
     return new Proxy<View>(this, {
-      set: (view, key: keyof View, value: any, r): boolean => {
+      set: (view, key: keyof View, value: any): boolean => {
         view[key] = value;
   
         this.__observers.forEach(func => func());
