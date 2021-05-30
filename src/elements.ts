@@ -24,10 +24,10 @@ function evaluateProps<E extends HTMLElement>(propObjects: ElementProps<E>[]): P
   return propObject;
 }
 
-export type ElementCreator<E extends HTMLElement = HTMLElement> = (this: View | void, ...propsObjects: (ElementProps<E>)[]) => E;
+export type ElementCreator<E extends HTMLElement = HTMLElement> = (this: Subscribable | void, ...propsObjects: (ElementProps<E>)[]) => E;
 
 export function generateElementCreator<E extends HTMLElement>(tagName: string): ElementCreator<E> {
-  return function elementCreator(this: View | void, ...propObjects: (ElementProps<E>)[]): E {
+  return function elementCreator(this: Subscribable | void, ...propObjects: (ElementProps<E>)[]): E {
     let propsToAssign: Partial<E> = {};
 
     const element = document.createElement(tagName) as E;
@@ -36,7 +36,7 @@ export function generateElementCreator<E extends HTMLElement>(tagName: string): 
 
     let handlingUpdates = false;
 
-    function assignProps(this: View | void) {
+    function assignProps(this: Subscribable | void) {
       if (propObjects) propsToAssign = evaluateProps(propObjects);
 
       if (this && !handlingUpdates) {
@@ -50,7 +50,7 @@ export function generateElementCreator<E extends HTMLElement>(tagName: string): 
       Object.assign(element, propsToAssign);
     }
 
-    if (this instanceof View) {
+    if (this) {
       assignProps.bind(this)();
     } else {
       assignProps();
@@ -61,7 +61,7 @@ export function generateElementCreator<E extends HTMLElement>(tagName: string): 
 }
 
 export type GenerateElementsOpts = {
-  bind?: View;
+  bind?: Subscribable;
 }
 
 export function elements({ bind }: GenerateElementsOpts) {
