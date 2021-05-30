@@ -4,6 +4,7 @@ The no-BS JavaScript front-end framework. We don't stray from the DOM.
 
 # Goals
 
+- No dependencies
 - Small bundle size
 - Encourage mutability
 - Do not impose transpilation in client source code, should be 100% implementable in vanilla JS
