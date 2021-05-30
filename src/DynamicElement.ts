@@ -1,19 +1,25 @@
 import { View } from ".";
 
+export type FalsyPrimitive =  '' | 0 | false | null | undefined;
+
 export class DynamicElement<ElementType extends HTMLElement = HTMLElement> {
   parent?: HTMLElement;
-  element: ElementType;
   index: number = -1;
-  view: View;
 
-  shouldRender: () => boolean;
+  element: ElementType;
+  shouldRender: () => Primitive;
 
-  constructor(element: ElementType, view: View, shouldRender: () => boolean) {
-    this.view = view;
+  constructor(shouldRender: () => Primitive, element: ElementType) {
     this.element = element;
     this.shouldRender = shouldRender;
 
-    view.__onUpdate(() => this.conditionallyMount());
+    this.conditionallyMount = this.conditionallyMount.bind(this);
+
+    if (!element.__JS_UI_STORE.subscribable) {
+      throw new Error('JS-UI: You cannot construct a DynamicElement with an element that is not bound to a Subscribable.');
+    }
+
+    element.__JS_UI_STORE.subscribable.onUpdate(this.conditionallyMount)
   }
 
   conditionallyMount(): void {
@@ -31,7 +37,7 @@ export class DynamicElement<ElementType extends HTMLElement = HTMLElement> {
   }
 
   clone(): DynamicElement<ElementType> {
-    const clone = new DynamicElement<ElementType>(this.element.cloneNode(true) as ElementType, this.view, this.shouldRender);
+    const clone = new DynamicElement<ElementType>(this.shouldRender, this.element.cloneNode(true) as ElementType);
 
     return clone;
   }

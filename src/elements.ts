@@ -32,7 +32,7 @@ export function generateElementCreator<E extends HTMLElement>(tagName: string): 
 
     const element = document.createElement(tagName) as E;
 
-    element.__JS_UI_STORE = getInitialElementStore();
+    element.__JS_UI_STORE = getInitialElementStore({ subscribable: this || undefined });
 
     let handlingUpdates = false;
 
@@ -42,7 +42,7 @@ export function generateElementCreator<E extends HTMLElement>(tagName: string): 
       if (this && !handlingUpdates) {
         handlingUpdates = true;
 
-        this.__onUpdate(() => {
+        this.onUpdate(() => {
           assignProps();
         });
       }

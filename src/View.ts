@@ -1,6 +1,6 @@
 import { elements } from './elements';
 
-export class View {
+export class View implements Subscribable {
   __observers: (() => void)[] = [];
 
   elements = elements({ bind: this });
@@ -17,7 +17,7 @@ export class View {
     });
   }
 
-  __onUpdate(cb: () => void): void {
+  onUpdate(cb: () => void): void {
     this.__observers.push(cb);
   }
 

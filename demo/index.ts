@@ -21,14 +21,8 @@ class TestView extends View {
     const wrapper = div();
     const heading = h1(() => `Hello, ${this.testValue}!`);
     const testInput = input(() => ({ value: this.testValue, oninput: this.handleInputChange }));
-    const conditionalHeading1 = conditional(
-      h1('WOAH1'),
-      { view: this, shouldRender: () => this.testValue == 'woah', parent: wrapper },
-    );
-    const conditionalHeading2 = conditional(
-      h1('WOAH2'),
-      { view: this, shouldRender: () => this.testValue == 'woah', parent: wrapper },
-    );
+    const conditionalHeading1 = conditional(() => this.testValue == 'woah', h1('WOAH1'));
+    const conditionalHeading2 = conditional(() => this.testValue == 'woah', h1('WOAH2'));
 
     return parent(wrapper, [
       conditionalHeading2,

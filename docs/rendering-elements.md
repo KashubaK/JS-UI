@@ -3,9 +3,9 @@
 ## Login form example
 
 ```ts
-import { parent, App, View } from 'js-ui';
+import { parent, Entrypoint, View } from 'js-ui';
 
-const app = new App('#root', LoginCardView);
+const app = new Entrypoint('#root', LoginCardView);
 
 class LoginCardView extends View {
   username = '';
