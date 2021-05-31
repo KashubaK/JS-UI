@@ -41,7 +41,7 @@ new Entrypoint('#root', new App());
 
 When you load the browser you should see `<h1>Hello world!</h1>` within the `#root` element.
 
-Next up: [read more about reactivity](docs/reactivity.md).
+[Read more about views](https://github.com/KashubaK/JS-UI/blob/master/docs/views.md).
 
 ___
 
