@@ -23,7 +23,6 @@ const config = {
     new HtmlWebpackPlugin({
       template: 'demo/index.html'
     }),
-    new BundleAnalyzerPlugin(),
   ],
   devServer: {
     contentBase: __dirname + '/dist',

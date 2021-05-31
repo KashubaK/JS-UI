@@ -1,4 +1,4 @@
-import { Entrypoint, conditional, parent, View, elements } from '../src/index';
+import { Entrypoint, conditional, parent, View } from '../src/index';
 
 class TestView extends View {
   nested = {

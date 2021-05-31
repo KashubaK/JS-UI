@@ -4,7 +4,8 @@
   "main": "dist/js-ui.js",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --mode=production",
+    "build": "tsc",
+    "analyze": "webpack --mode=production",
     "dev": "webpack serve"
   },
   "devDependencies": {

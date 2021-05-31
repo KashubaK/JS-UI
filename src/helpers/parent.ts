@@ -57,9 +57,7 @@ export class ParentElement<ParentElementType extends HTMLElement = HTMLElement> 
 }
 
 export function parent<E extends HTMLElement>(parentElement: E, children: ParentChildren | (() => ParentChildren)): E {
-  
   const parent = new ParentElement(parentElement, children);
-  console.log('creating new parent element')
 
   parent.renderChildren();
 
