@@ -27,6 +27,8 @@ export class ParentElement<ParentElementType extends HTMLElement = HTMLElement> 
 
     children = children.filter((child) => {
       if (child instanceof DynamicElement) {
+        child.setParent(this.container);
+
         return child.shouldRender();
       } else {
         return !!child;
@@ -36,10 +38,7 @@ export class ParentElement<ParentElementType extends HTMLElement = HTMLElement> 
     children.forEach((child, index) => {
       if (!child) return;
       if (child instanceof DynamicElement) {
-        child.setParent(this.container);
-        child.setIndex(index);
-        child.conditionallyMount();
-        return;
+        child = child.element;
       }
 
       const activeChildAtIndex = this.activeChildren[index];
