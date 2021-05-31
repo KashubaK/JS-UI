@@ -1,21 +1,67 @@
 import { DynamicElement } from "../DynamicElement";
+import { evaluateProps } from '../elements';
 
-export function parent<E extends HTMLElement>(parentElement: E, children: (HTMLElement | DynamicElement | null)[]): E {
-  const currentChildren = parentElement.children;
-  if (currentChildren.length > 0) return parentElement;
+type ParentChildren = (HTMLElement | DynamicElement)[]; 
 
-  children.forEach((child, index) => {
-    if (!child) return;
-    if (child instanceof DynamicElement) {
-      child.setParent(parentElement);
-      child.setIndex(index);
-      child.conditionallyMount();
-      return;
-    }
+export class ParentElement<ParentElementType extends HTMLElement = HTMLElement> {
+  container: ParentElementType;
+  children: ParentChildren | (() => ParentChildren);
 
-    child.__JS_UI_STORE.position = index;
-    parentElement.appendChild(child);
-  });
+  constructor(container: ParentElementType, children: ParentChildren | (() => ParentChildren)) {
+    this.container = container;
+    this.children = children;
 
-  return parentElement;
+    this.container.__JS_UI_STORE.subscribable?.onUpdate(() => {
+      this.renderChildren();
+    })
+  }
+
+  get activeChildren(): HTMLElement[] {
+    return Array.from(this.container.children) as HTMLElement[];
+  }
+
+  renderChildren(): void {
+    let children = typeof this.children == 'function' ? this.children() : this.children;
+
+    console.log('beeb', children)
+
+    children = children.filter((child) => {
+      if (child instanceof DynamicElement) {
+        return child.shouldRender();
+      } else {
+        return !!child;
+      }
+    });
+
+    children.forEach((child, index) => {
+      if (!child) return;
+      if (child instanceof DynamicElement) {
+        child.setParent(this.container);
+        child.setIndex(index);
+        child.conditionallyMount();
+        return;
+      }
+
+      const activeChildAtIndex = this.activeChildren[index];
+      child.__JS_UI_STORE.position = index;
+
+      if (activeChildAtIndex) {
+        const newProps = evaluateProps(child.__JS_UI_STORE.propObjects);
+
+        Object.assign(activeChildAtIndex, newProps);
+      } else {
+        this.container.appendChild(child);
+      }
+    });
+  }
+}
+
+export function parent<E extends HTMLElement>(parentElement: E, children: ParentChildren | (() => ParentChildren)): E {
+  
+  const parent = new ParentElement(parentElement, children);
+  console.log('creating new parent element')
+
+  parent.renderChildren();
+
+  return parent.container;
 }

@@ -1,21 +1,37 @@
 export class Mutable<T = unknown> implements Subscribable {
   __observers: (() => void)[] = [];
 
+  static KEYS_TO_IGNORE = [
+    '__observers',
+    'onUpdate',
+    'elements',
+    '__isProxied',
+  ]
+
   constructor(initial?: T) {
     Object.assign(this, initial);
 
+    const fireObservers = (): void => {
+      this.__observers.forEach(func => func());
+    }
+
     const validator = {
-      get: (target: any, key: keyof typeof target): any => {
-        if (typeof target[key] === 'object') {
-          return new Proxy(target[key], validator)
-        } else {
-          return target[key];
-        }
+      get: (target: any, key: string): any => {
+        if (!Mutable.KEYS_TO_IGNORE.includes(key) && typeof target[key] === 'object' && typeof target[key] !== 'function' && !target[key].__isProxied) {
+          const proxy = new Proxy(target[key], validator);
+          proxy.__isProxied = true;
+
+          target[key] = proxy;
+        } 
+
+        return target[key];
       },
       set: (mutable: Mutable, key: keyof Mutable, value: any) => {
         mutable[key] = value;
 
-        this.__observers.forEach(func => func());
+        if (!Mutable.KEYS_TO_IGNORE.includes(key)) {
+          fireObservers();
+        }
 
         return true;
       },

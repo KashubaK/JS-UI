@@ -2,6 +2,7 @@ export function getInitialElementStore(overrides: Partial<ElementDataStore> = {}
   return {
     position: -1,
     subscribable: undefined,
+    propObjects: [],
     ...overrides,
   }
 }
